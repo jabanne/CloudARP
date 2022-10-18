@@ -94,15 +94,5 @@ output "pw3" {
   value = aws_iam_user_login_profile.user3.password
 }
 
-# added to instantiate Ubuntu VM of type t2.micro on AWS 
-#comment out below unless needed
-/*resource "aws_instance" "web" {
-  ami           = "ami-017fecd1353bcc96e"
-  instance_type = "t2.micro"
-
-  tags = {
-    name = "HelloWorld"
-  }
-  } */
 
 

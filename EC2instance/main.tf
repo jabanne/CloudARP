@@ -23,6 +23,7 @@ resource "aws_instance" "web" {
   ami           = "ami-017fecd1353bcc96e"
   instance_type = "t2.micro"
 
+#how to run commands straight through bash shell
   user_data = <<-EOL
   #! /bin/bash -xe
   
@@ -33,6 +34,8 @@ EOL
   tags = {
     name = "HelloWorld"
   }
+  
+  # how you would use provisioner to run commands, couldnt connect due to config of vm
   /*connection {
     type     = "ssh"
     user     = "root"

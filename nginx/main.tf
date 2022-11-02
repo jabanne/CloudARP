@@ -109,23 +109,47 @@ resource "aws_instance" "nginx_server" {
   provisioner "file" {
     source      = "nginx.sh"
     destination = "nginx.sh"
-    
+
     connection {
-    type        = "ssh"
-    host        = self.public_ip
-    user        = "ubuntu"
-    private_key = file("${var.PRIVATE_KEY_PATH}")
-  }
+      type        = "ssh"
+      host        = self.public_ip
+      user        = "ubuntu"
+      private_key = file("${var.PRIVATE_KEY_PATH}")
+    }
   }
 
   # Executing the nginx.sh file
-  # Terraform does not recommend this method becuase Terraform state file cannot track what the script is provisioning
+  # changing ownership of html directory and index html file to ubuntu to make changes  
   provisioner "remote-exec" {
     inline = [
       "chmod +x ~/nginx.sh",
-      "sudo ./nginx.sh"
+      "sudo ./nginx.sh",
+      "cd /var/www",
+      "sudo chown ubuntu:ubuntu html",
+      "cd html",
+      "sudo chown ubuntu:ubuntu index.nginx-debian.html"
     ]
   }
+  # replacing default html index file with own file using provisioner so that web page is our own
+  provisioner "file" {
+    source      = "index.nginx-debian.html"
+    destination = "/var/www/html/index.nginx-debian.html"
+
+    connection {
+      type        = "ssh"
+      host        = self.public_ip
+      user        = "ubuntu"
+      private_key = file("${var.PRIVATE_KEY_PATH}")
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo service nginx start"
+    ]
+  }
+
+
   # Setting up the ssh connection to install the nginx server
   connection {
     type        = "ssh"

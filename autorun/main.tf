@@ -24,9 +24,9 @@ resource "aws_iam_group" "group" {
 name = "Supporters"
 }
 
-/*resource "aws_iam_group_policy_attachment" "attachsupport" {
+resource "aws_iam_group_policy_attachment" "attachsupport" {
 group = aws_iam_group.group.name
 policy_arn = "arn:aws:iam::aws:policy/job-function/SupportUser"
-} */
+} 
 
 
